@@ -2,6 +2,10 @@ import threading
 import subprocess
 import schedule
 import time
+from fake_server import app  # фейковый Flask-сервер для Render
+
+def run_flask():
+    app.run(host="0.0.0.0", port=10000)  # открываем порт, чтобы Render не ругался
 
 def run_logger():
     subprocess.run(["python", "multi_log_viewers.py"])
@@ -20,12 +24,6 @@ def run_scheduler():
         time.sleep(30)
 
 if __name__ == "__main__":
-    # 🔁 Запускаем логгер в отдельном потоке
+    threading.Thread(target=run_flask).start()
     threading.Thread(target=run_logger).start()
-
-    # 🧪 ТЕСТ: запуск анализа и экспорта сразу при старте
-    subprocess.run(["python", "analyze_all.py"])
-    subprocess.run(["python", "export_to_sheets.py"])
-
-    # ⏱ Планировщик для ежедневного запуска
     threading.Thread(target=run_scheduler).start()
