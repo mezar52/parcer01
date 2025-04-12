@@ -4,6 +4,7 @@ from datetime import datetime, time, date
 from collections import defaultdict
 
 log_dir = "viewer_log"
+os.makedirs(log_dir, exist_ok=True)  # ✅ создаёт папку, если её нет
 today_str = date.today().isoformat()
 
 intervals = [
@@ -22,13 +23,11 @@ def safe_int(val):
         return None
 
 def delta_positive(values):
-    """Только положительное изменение"""
     if len(values) >= 2:
         return max(0, values[-1] - values[0])
     return 0
 
 def delta_any(values):
-    """Любое изменение (может быть отрицательным)"""
     if len(values) >= 2:
         return values[-1] - values[0]
     return 0
